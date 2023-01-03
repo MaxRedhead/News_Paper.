@@ -1,0 +1,102 @@
+from news.models import *
+
+u1 = User.objects.create_user(username = "Ben")
+u2 = User.objects.create_user(username = "Tommy")
+
+Author.objects.create(authorUser=u1)
+Author.objects.create(authorUser=u2)
+
+Category.objects.create(name = "CARS")
+Category.objects.create(name = "SPORT")
+Category.objects.create(name = "POLITICS")
+Category.objects.create(name = "IT")
+
+author = Author.objects.get(id=1)
+author1 = Author.objects.get(id=2)
+
+Post.objects.create(author=author, categoryTypes = "AR", title = "Food Managment", text = "Text")
+Post.objects.create(author=author, categoryTypes = "AR", title = "Ford_Cars", text = "Text1")
+Post.objects.create(author=author1, categoryTypes = "NW", title = "World_Politics", text = "Text2")
+
+Post.objects.get(id=1).postCategory.add(Category.objects.get(id=1))
+Post.objects.get(id=2).postCategory.add(Category.objects.get(id=2))
+Post.objects.get(id=3).postCategory.add(Category.objects.get(id=3))
+
+Comment.objects.create(commentPost = Post.objects.get(id=1), commentUser = Author.objects.get(id=1).authorUser, text = "Some text")
+Comment.objects.create(commentPost = Post.objects.get(id=1), commentUser = Author.objects.get(id=1).authorUser, text = "Some another text")
+Comment.objects.create(commentPost = Post.objects.get(id=2), commentUser = Author.objects.get(id=2).authorUser, text = "Some text")
+Comment.objects.create(commentPost = Post.objects.get(id=3), commentUser = Author.objects.get(id=1).authorUser, text = "Some text")
+
+Comment.objects.get(id=1).like()
+
+Comment.objects.get(id=1).rating
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=1).like()
+Comment.objects.get(id=2).dislike()
+Comment.objects.get(id=2).dislike()
+Comment.objects.get(id=3).dislike()
+Comment.objects.get(id=4).like()
+Comment.objects.get(id=4).like()
+
+a = Author.objects.get(id=1)
+a.update_rating()
+a.authorRating
+
+a = Author.objects.order_by("-authorRating")[:1]
+a
+
+
+for i in a:
+i.authorRating
+i.authorUser.username
+
+'rating': [
+                'lt',
+                'gt',
+
+def create_post(request):
+    form = PostForm()
+
+    if request.method == 'POST':
+        form = PostForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/news/')
+
+    return render(request, 'post_edit.html', {'form': form})
+
+Category, through="PostCategory"
+
+{% if is_paginated %}
+<nav aria-label="...">
+    <ul class="pagination pagination-sm justify-content-center">
+        {% if page_obj.has_previous %}
+        <li  class="page-item"><a class="page-link" href="?page=1">Начало</a></li>
+        <li  class="page-item"><a class="page-link" href="?page={{page_obj.previous_page_number}}"><<<</a></li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <li class="page-item active"><a class="page-link">{{ num }}</a></li>
+            {% elif num > page_obj.number|add: '-3' and num < page_obj.number|add: '3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li  class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">>>></a></li>
+        <li  class="page-item"><a class="page-link" href="?page={{page_obj.paginator.num_pages}}">Конец</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+    {% if is_not_subscriber %}
+
+
+
+celery -A NewsPaper worker -l INFO
+celery -A NewsPaper worker -l INFO -E
