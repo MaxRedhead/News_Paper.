@@ -11,7 +11,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'action_every_monday_8am': {
         'task': 'weekly_sending',
-        'schedule': crontab(hour=20, minute=5, day_of_week='monday'),
+        'schedule': crontab(hour=8, minute=00, day_of_week='monday'),
         'args': 'some_arg',
     },
 }
